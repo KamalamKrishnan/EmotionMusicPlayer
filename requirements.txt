@@ -1,0 +1,4 @@
+deepface
+pygame
+mutagen
+opencv-python
