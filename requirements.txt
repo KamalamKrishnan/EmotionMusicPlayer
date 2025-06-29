@@ -2,3 +2,4 @@ deepface
 pygame
 mutagen
 opencv-python
+streamlit
