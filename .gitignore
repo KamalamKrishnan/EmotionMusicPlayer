@@ -1,0 +1,24 @@
+# Ignore Python environment
+.venv/
+venv/
+env/
+__pycache__/
+*.pyc
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore audio files
+music/*.mp3
+
+# Ignore any output images or video
+*.jpg
+*.png
+*.avi
+
+# Ignore logs
+*.log
+
+# VSCode settings (optional)
+.vscode/
