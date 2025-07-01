@@ -25,8 +25,8 @@ emotion_window = []
 current_song_name = ""
 song_duration = 0
 start_time = 0
-
-# Function to play music
+no_face_count = 0
+pause_threshold = 5  # Number of frames before auto-pause
 
 
 def play_emotion_song(emotion):
@@ -75,34 +75,47 @@ if run:
 
         try:
             result = DeepFace.analyze(
-                frame_rgb, actions=['emotion'], enforce_detection=False)
+                frame_rgb, actions=['emotion'], enforce_detection=False
+            )
             if isinstance(result, list):
                 result = result[0]
 
-            if 'dominant_emotion' in result:
+            if 'dominant_emotion' in result and result['dominant_emotion'] in emotion_to_song:
                 dominant_emotion = result['dominant_emotion']
+                emotion_window.append(dominant_emotion)
+                if len(emotion_window) > 10:
+                    emotion_window.pop(0)
 
-                if dominant_emotion in emotion_to_song:
-                    emotion_window.append(dominant_emotion)
-                    if len(emotion_window) > 10:
-                        emotion_window.pop(0)
+                smoothed_emotion = max(
+                    set(emotion_window), key=emotion_window.count)
+                play_emotion_song(smoothed_emotion)
 
-                    smoothed_emotion = max(
-                        set(emotion_window), key=emotion_window.count)
-                    play_emotion_song(smoothed_emotion)
-                    cv2.putText(frame_rgb, f"Emotion: {smoothed_emotion}", (10, 40),
-                                cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-                    face_detected = True
+                # Show confidence level
+                confidence = result['emotion'][dominant_emotion]
+                cv2.putText(frame_rgb, f"{smoothed_emotion.capitalize()} ({int(confidence)}%)",
+                            (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+
+                face_detected = True
+
         except:
             pass
 
         if not face_detected:
+            no_face_count += 1
             cv2.putText(frame_rgb, "No face detected", (10, 40),
                         cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
+            if no_face_count >= pause_threshold and pygame.mixer.music.get_busy():
+                pygame.mixer.music.pause()
+                cv2.putText(frame_rgb, "Paused - No Face", (10, 80),
+                            cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+        else:
+            no_face_count = 0
+            if not pygame.mixer.music.get_busy() and current_emotion:
+                pygame.mixer.music.unpause()
 
         FRAME_WINDOW.image(frame_rgb)
 
-        # Progress bar for music
+        # Music progress bar
         if song_duration > 0:
             elapsed = time.time() - start_time
             progress = min(1.0, elapsed / song_duration)
