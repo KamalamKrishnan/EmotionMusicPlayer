@@ -1,16 +1,39 @@
-# 🎵 Real-Time Emotion-Based Music Player
+# 🎧 Emotion-Based Music Player using OpenCV + DeepFace
 
-This project uses your webcam and AI (DeepFace) to detect your facial emotion and play music that matches your mood in real time.
+Play songs that match your **real-time facial emotions**!  
+This AI-powered music player uses your **webcam** to detect emotions like **Happy**, **Sad**, or **Neutral**, and plays appropriate music automatically.
 
-## ✅ Features
-- Real-time face and emotion detection
-- Plays different songs for happy, sad, and neutral emotions
-- Smooth emotion prediction using last 10 frames
-- Progress bar for song duration
-- "No face detected" alert when user moves away
+---
 
-## 🛠 Requirements
-Install dependencies using:
+## 😊 Emotions Supported
+
+- 😀 **Happy** → Plays upbeat songs  
+- 😐 **Neutral** → Plays calm songs  
+- 😢 **Sad** → Plays emotional tracks  
+
+> Your face decides the vibe! 🎶
+
+---
+
+## 🔥 Features
+
+- 🎥 Real-time face detection via webcam  
+- 🧠 Emotion detection using **DeepFace** (or **FER**)  
+- 🎵 Automatically plays emotion-matched songs  
+- ⏸️ Auto-pause when **no face detected**  
+- 📊 Song progress bar  
+- 📈 Emotion confidence level display  
+- 🚨 "No face detected" alert  
+
+---
+
+## 📦 Requirements
+
+Install all dependencies:
 
 ```bash
 pip install -r requirements.txt
+
+Or manually install:
+
+pip install opencv-python deepface pygame numpy
